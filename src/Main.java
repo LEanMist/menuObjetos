@@ -1,12 +1,13 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
+
     private static ArrayList<Aluno> listaAlunos = new ArrayList<>();
     private static ArrayList<Turma> listaTurmas = new ArrayList<>();
     public static void main(String[] args) {
+        menuPrincipal();
     }
 
     public static void menuPrincipal() {
@@ -14,7 +15,7 @@ public class Main {
         System.out.println("1 - Alunos");
         System.out.println("2 - Turmas");
         System.out.println("3 - Sair");
-        String opcao = Leitura.dados("digite a opcção desejada: ");
+        String opcao = Leitura.dados("digite a opção desejada: ");
         switch (opcao) {
             case "1":
                 menuAlunos();
@@ -41,20 +42,24 @@ public class Main {
         System.out.println("2 - Cadastrar turma");
         System.out.println("3 - Atualizar turma");
         System.out.println("4 - Excluir turma");
-        System.out.println("5 - Voltar ao menuPrincipal Principal");
-        String opcao = Leitura.dados("digite a opcção desejada: ");
+        System.out.println("5 - Voltar ao menu Principal");
+        String opcao = Leitura.dados("digite a opção desejada: ");
         switch (opcao) {
             case "1":
                 listarTurmas();
+                menuTurmas();
                 break;
             case "2":
                 cadastrarTurma();
+                menuTurmas();
                 break;
             case "3":
                 atualizarTurma();
+                menuTurmas();
                 break;
             case "4":
                 excluirTurma();
+                menuTurmas();
                 break;
             case "5":
                 menuPrincipal();
@@ -70,20 +75,24 @@ public class Main {
         System.out.println("2 - Cadastrar Aluno");
         System.out.println("3 - Atualizar aluno");
         System.out.println("4 - Excluir Aluno");
-        System.out.println("5 - Voltar ao menuPrincipal principal");
-        String opcao = Leitura.dados("digite a opcção desejada: ");
+        System.out.println("5 - Voltar ao menu principal");
+        String opcao = Leitura.dados("digite a opção desejada: ");
         switch (opcao) {
             case "1":
                 listarAlunos();
+                menuAlunos();
                 break;
             case "2":
                 cadastrarAluno();
+                menuAlunos();
                 break;
             case "3":
                 atualizarAluno();
+                menuAlunos();
                 break;
             case "4":
                 excluirAluno();
+                menuAlunos();
                 break;
             case "5":
                 menuPrincipal();
@@ -101,14 +110,75 @@ public class Main {
     }
 
     private static void cadastrarTurma() {
+        Periodo periodo = validarPeriodo();
+
+        String curso = Leitura.dados("Digite o curso");
+        while(!isCharacter(curso)) {
+            System.out.println("Nome de curso invalido! Não use números ou caracteres especiais");
+            curso = Leitura.dados("Digite o curso");
+        }
+        String sigla = Leitura.dados("Digite a sigla");
+        boolean repetido = true;
+        while(sigla.isBlank() && !repetido) {
+            System.out.println("Sigla invalida");
+            sigla = Leitura.dados("Digite a sigla");
+
+            sigla = sigla.toUpperCase();
+
+            for (Turma t : listaTurmas) {
+                if (t.getSigla().equals(sigla)) {
+                    System.out.println("Turma já cadastrada");
+                    repetido = true;
+                }
+            }
+
+            repetido = false;
+        }
+
+
+        Turma turma = new Turma(curso, sigla, periodo);
+        listaTurmas.add(turma);
+
+    }
+
+    private static boolean isCharacter(String texto) {
+        String textoSemNumeros = texto.replaceAll("\\d","");
+        return !texto.isBlank() && texto.equals(textoSemNumeros);
+    }
+
+    private static Periodo validarPeriodo() {
+        String opcaoPeriodo = Leitura.dados("""
+                Digite o numero do periodo escolhido:
+                1 - Matutino
+                2 - Vespertino
+                3 - Noturno
+                4 - Integral""");
+        switch (opcaoPeriodo){
+            case "1":
+                return Periodo.MATUTINO;
+            case "2":
+                return Periodo.VERPERTINO;
+            case "3":
+                return Periodo.NOTURNO;
+            case "4":
+                return Periodo.INTEGRAL;
+            default:
+                System.out.println("Opcao invalida, digite novamente");
+                return validarPeriodo();
+        }
     }
 
     private static void listarTurmas() {
+        if(listaTurmas.isEmpty()) {
+            System.out.println("Não ha turmas cadastradas");
+            return;
+        }
         for(Turma t: listaTurmas){
             System.out.println(t);
         }
     }
 
+    // AREA DE ALUNOS
 
     private static void excluirAluno() {
     }
@@ -120,6 +190,10 @@ public class Main {
     }
 
     private static void listarAlunos() {
+        if(listaAlunos.isEmpty()){
+            System.out.println("Não ha alunos cadastradas");
+            return;
+        }
         for(Aluno a: listaAlunos){
             System.out.println(a);
         }
