@@ -6,6 +6,7 @@ public class Main {
 
     private static ArrayList<Aluno> listaAlunos = new ArrayList<>();
     private static ArrayList<Turma> listaTurmas = new ArrayList<>();
+
     public static void main(String[] args) {
         menuPrincipal();
     }
@@ -33,6 +34,7 @@ public class Main {
             }
             default:
                 System.out.println("Opção Invalida! Tente Novamente");
+                menuPrincipal();
         }
     }
 
@@ -66,6 +68,7 @@ public class Main {
                 break;
             default:
                 System.out.println("Opção Invalida! Tente Novamente");
+                menuTurmas();
         }
     }
 
@@ -99,6 +102,7 @@ public class Main {
                 break;
             default:
                 System.out.println("Opção Invalida! Tente Novamente");
+                menuAlunos();
         }
 
     }
@@ -118,27 +122,27 @@ public class Main {
             curso = Leitura.dados("Digite o curso");
         }
         String sigla = Leitura.dados("Digite a sigla");
-        boolean repetido = true;
-        while(sigla.isBlank() && !repetido) {
-            System.out.println("Sigla invalida");
+        while(!validarSigla(sigla)){
+            System.out.println("Sigla invalida! precisa conster texto e nao pode ser repetida");
             sigla = Leitura.dados("Digite a sigla");
-
-            sigla = sigla.toUpperCase();
-
-            for (Turma t : listaTurmas) {
-                if (t.getSigla().equals(sigla)) {
-                    System.out.println("Turma já cadastrada");
-                    repetido = true;
-                }
-            }
-
-            repetido = false;
         }
-
 
         Turma turma = new Turma(curso, sigla, periodo);
         listaTurmas.add(turma);
+        System.out.println("Turma cadastrada com sucess");
+        menuTurmas();
 
+    }
+
+    private static boolean validarSigla(String sigla) {
+        if(!sigla.isBlank()) return false;
+
+        for (Turma turma : listaTurmas) {
+            if (turma.getSigla().equals(sigla)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static boolean isCharacter(String texto) {
