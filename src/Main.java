@@ -108,6 +108,36 @@ public class Main {
     }
 
     private static void excluirTurma() {
+        listaTurmasIndiceSigla();
+        String opcao = Leitura.dados("Digite o numero da turma que deseja excluir: ");
+        int opcaoValida = -1;
+        while(validaOpcaoExcluir(opcao)==-1){
+            System.out.println("opcao invalida! Digite novamente");
+            opcao = Leitura.dados("Digite o numero da turma que deseja excluir");
+        }
+        listaTurmas.remove(validaOpcaoExcluir(opcao));
+    }
+
+    private static int validaOpcaoExcluir(String opcao) {
+        if (opcao.isBlank()) return -1;
+
+        int opcaoNumero = -1;
+
+        try{
+            opcaoNumero = Integer.parseInt(opcao);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+
+        int indiceLista = opcaoNumero-1;
+        return indiceLista >= 0 && listaTurmas.size() > indiceLista ? indiceLista : -1;
+    }
+
+    private static void listaTurmasIndiceSigla() {
+        System.out.println("\nLista das Turmas: ");
+        for (int i=0;i<listaTurmas.size();i++){
+            System.out.printf("%d - %s",i+1, listaTurmas.get(i).getSigla());
+        }
     }
 
     private static void atualizarTurma() {
@@ -135,12 +165,11 @@ public class Main {
     }
 
     private static boolean validarSigla(String sigla) {
-        if(!sigla.isBlank()) return false;
+        if(sigla.isBlank()) return false;
 
         for (Turma turma : listaTurmas) {
-            if (turma.getSigla().equals(sigla)) {
-                return false;
-            }
+            if (turma.getSigla().equals(sigla)) return false;
+
         }
         return true;
     }
