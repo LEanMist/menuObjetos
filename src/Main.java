@@ -109,13 +109,21 @@ public class Main {
 
     private static void excluirTurma() {
         listaTurmasIndiceSigla();
-        String opcao = Leitura.dados("Digite o numero da turma que deseja excluir: ");
+        String opcao = Leitura.dados("\nDigite o numero da turma que deseja excluir: ");
         int opcaoValida = -1;
-        while(validaOpcaoExcluir(opcao)==-1){
-            System.out.println("opcao invalida! Digite novamente");
-            opcao = Leitura.dados("Digite o numero da turma que deseja excluir");
+        int opcaoUsuario = -1;
+        while(opcaoValida==-1){
+            opcaoUsuario = validaOpcaoExcluir(opcao);
+
+            if(opcaoUsuario==-1){
+                System.out.println("opção inválida! Digite novamente");
+                opcao = Leitura.dados("Digite o número da turma que desejada excluir");
+            } else {
+                opcaoValida = opcaoUsuario;
+            }
         }
-        listaTurmas.remove(validaOpcaoExcluir(opcao));
+        listaTurmas.remove(opcaoUsuario);
+        System.out.println("Turma excluida com sucesso!");
     }
 
     private static int validaOpcaoExcluir(String opcao) {
