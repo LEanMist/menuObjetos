@@ -108,6 +108,10 @@ public class Main {
     }
 
     private static void excluirTurma() {
+        if(isVazio(listaTurmas)) {
+            System.out.println("Não ha turmas cadastradas");
+            return;
+        }
         listaTurmasIndiceSigla();
         String opcao = Leitura.dados("\nDigite o numero da turma que deseja excluir: ");
         int opcaoValida = -1;
@@ -122,8 +126,34 @@ public class Main {
                 opcaoValida = opcaoUsuario;
             }
         }
-        listaTurmas.remove(opcaoUsuario);
-        System.out.println("Turma excluida com sucesso!");
+        if (confirmaExclusao()){
+//            listaTurmas.remove(opcaoUsuario);
+            listaTurmas.get(opcaoUsuario).setAtivo(false);
+            System.out.println("Turma excluida com sucesso!");
+        }
+    }
+
+    private static boolean isVazio(ArrayList<Turma> listaTurmas) {
+        if (listaTurmas.isEmpty()) return true;
+        for(Turma turma : listaTurmas){
+            if(turma.isAtivo()) return  false;
+        }
+        return true;
+    }
+
+    private static boolean confirmaExclusao() {
+        while (true){
+            String confirma = Leitura.dados("Você tem certeza? (S/N): ").toUpperCase();
+            switch (confirma){
+                case "S":
+                    return true;
+                case "N":
+                    return false;
+                default:
+                    System.out.println("Opção invalida, digite S para sim ou N para não!");
+                    break;
+            }
+        }
     }
 
     private static int validaOpcaoExcluir(String opcao) {
@@ -144,7 +174,8 @@ public class Main {
     private static void listaTurmasIndiceSigla() {
         System.out.println("\nLista das Turmas: ");
         for (int i=0;i<listaTurmas.size();i++){
-            System.out.printf("%d - %s",i+1, listaTurmas.get(i).getSigla());
+            if (listaTurmas.get(i).isAtivo())
+                System.out.printf("%d - %s",i+1, listaTurmas.get(i).getSigla());
         }
     }
 
@@ -210,12 +241,13 @@ public class Main {
     }
 
     private static void listarTurmas() {
-        if(listaTurmas.isEmpty()) {
+        if(isVazio(listaTurmas)) {
             System.out.println("Não ha turmas cadastradas");
             return;
         }
         for(Turma t: listaTurmas){
-            System.out.println(t);
+            if (t.isAtivo())
+                System.out.println(t);
         }
     }
 
