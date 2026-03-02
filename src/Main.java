@@ -113,24 +113,16 @@ public class Main {
             return;
         }
         listaTurmasIndiceSigla();
-        String opcao = Leitura.dados("\nDigite o numero da turma que deseja excluir: ");
-        int opcaoValida = -1;
-        int opcaoUsuario = -1;
-        while(opcaoValida==-1){
-            opcaoUsuario = validaOpcaoExcluir(opcao);
 
-            if(opcaoUsuario==-1){
-                System.out.println("opção inválida! Digite novamente");
-                opcao = Leitura.dados("Digite o número da turma que desejada excluir");
-            } else {
-                opcaoValida = opcaoUsuario;
-            }
-        }
+        int idExcluir = validaIdTurma();
+
         if (confirmaExclusao()){
 //            listaTurmas.remove(opcaoUsuario);
-            listaTurmas.get(opcaoUsuario).setAtivo(false);
+
+            listaTurmas.get(idExcluir).setAtivo(false);
             System.out.println("Turma excluida com sucesso!");
         }
+        menuTurmas();
     }
 
     private static boolean isVazio(ArrayList<Turma> listaTurmas) {
@@ -156,7 +148,7 @@ public class Main {
         }
     }
 
-    private static int validaOpcaoExcluir(String opcao) {
+    private static int validaitemLista(String opcao) {
         if (opcao.isBlank()) return -1;
 
         int opcaoNumero = -1;
@@ -180,6 +172,56 @@ public class Main {
     }
 
     private static void atualizarTurma() {
+        if(isVazio(listaTurmas)) {
+            System.out.println("Não ha turmas cadastradas");
+            return;
+        }
+        listaTurmasIndiceSigla();
+
+        int idAtualizar = validaIdTurma();
+
+        System.out.printf("O periodo atual é: "+ listaTurmas.get(idAtualizar).getPeriodo());
+
+        atualizarPeriodo(idAtualizar);
+
+    }
+
+    private static void atualizarPeriodo(int idAtualizar) {
+        boolean rodarNovamente = true;
+        while (rodarNovamente) {
+            String opcaoPeriodo = Leitura.dados("\nDeseja modificar periodo? (S/N): ").toUpperCase();
+            switch (opcaoPeriodo) {
+                case "S":
+                    Periodo periodo = validarPeriodo();
+                    listaTurmas.get(idAtualizar).setPeriodo(periodo);
+                    System.out.println("Periodo atualizado para\n"+periodo);
+                    rodarNovamente = false;
+                    break;
+                case "N":
+                    System.out.println("adeus");
+                    rodarNovamente = false;
+                    break;
+                default:
+                    System.out.println("Opçao invalida! Escolha S para SIM ou N para NÃO");
+            }
+        }
+    }
+
+    private static int validaIdTurma() {
+        String opcao = Leitura.dados("\nDigite o numero da turma desejada: ");
+        int opcaoValida = -1;
+        int opcaoUsuario = -1;
+        while(opcaoValida==-1) {
+            opcaoUsuario = validaitemLista(opcao);
+
+            if (opcaoUsuario == -1) {
+                System.out.println("opção inválida! Digite novamente");
+                opcao = Leitura.dados("Digite o número da turma desejada");
+            } else {
+                opcaoValida = opcaoUsuario;
+            }
+        }
+        return opcaoValida;
     }
 
     private static void cadastrarTurma() {
@@ -229,7 +271,7 @@ public class Main {
             case "1":
                 return Periodo.MATUTINO;
             case "2":
-                return Periodo.VERPERTINO;
+                return Periodo.VESPERTINO;
             case "3":
                 return Periodo.NOTURNO;
             case "4":

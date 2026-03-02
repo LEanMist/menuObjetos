@@ -1,6 +1,6 @@
 public enum Periodo {
     MATUTINO,
-    VERPERTINO,
+    VESPERTINO,
     NOTURNO,
     INTEGRAL
 }
