@@ -180,90 +180,90 @@ public class Main {
 
         int idAtualizar = validaIdTurma();
 
-        //TODO ATUALIZAR PERIODO
         System.out.printf("O periodo atual é: "+ listaTurmas.get(idAtualizar).getPeriodo());
-        atualizarPeriodo(idAtualizar);
+        atualizarParcial("periodo", idAtualizar);
 
-        //TODO ATUALIZAR CURSO
         System.out.println("O curso atual é: "+ listaTurmas.get(idAtualizar).getCurso());
-        atualizarCurso(idAtualizar);
+        atualizarParcial("curso", idAtualizar);
 
-        //TODO ATUALIZAR SIGLA
         System.out.println("A sigla atual é: "+ listaTurmas.get(idAtualizar).getSigla());
-        atualizarSigla(idAtualizar);
+        atualizarParcial("sigla", idAtualizar);
+    }
 
+    private static void atualizarParcial(String atributo, int idAtualizar) {
+        //1 - Periodo, 2 - Curso, 3 - Sigla
+        boolean rodarNovamente = true;
+        while (rodarNovamente) {
+            String opcao = Leitura.dados("Deseja modificar "+ atributo +" ? (S/N): ").toUpperCase();
+            switch (opcao) {
+                case "S":
+                    switch (atributo){
+                        case "periodo":
+                            Periodo periodo = validarPeriodo();
+                            listaTurmas.get(idAtualizar).setPeriodo(periodo);
+                            break;
+                        case "curso":
+                            String curso = validarCurso();
+                            listaTurmas.get(idAtualizar).setCurso(curso);
+                            break;
+                        case "sigla":
+                            String sigla = validarSigla();
+                            listaTurmas.get(idAtualizar).setSigla(sigla);
+                            break;
+                    }
+
+                    System.out.println(atributo + " atualizado com sucesso");
+                    rodarNovamente = false;
+                    break;
+                case "N":
+                    System.out.println("adeus");
+                    rodarNovamente = false;
+                    break;
+                default:
+                    System.out.println("Opçao invalida! Escolha S para SIM ou N para NÃO");
+            }
+        }
+
+    }
+
+    private static String validarSigla() {
+        String sigla = Leitura.dados("Digite a sigla: ");
+        while(!validarSigla(sigla)){
+            System.out.println("Sigla inválida! Precisa conter texto e não pode ser repetida");
+            sigla = Leitura.dados("Digite a sigla: ");
+        }
+        return sigla;
+    }
+
+    private static String validarCurso() {
+        String curso = Leitura.dados("Digite o nome do curso: ");
+        while(!isCharacter(curso)) {
+            System.out.println("Nome de curso inválido! Não use números ou caracteres especiais, por favor");
+            curso = Leitura.dados("Digite o nome do curso: ");
+        }
+        return curso;
     }
 
     private static void atualizarPeriodo(int idAtualizar) {
         boolean rodarNovamente = true;
         while (rodarNovamente) {
-            String opcaoPeriodo = Leitura.dados("\nDeseja modificar periodo? (S/N): ").toUpperCase();
-            switch (opcaoPeriodo) {
+            String opcaoperiodo = Leitura.dados("Deseja modificar o periodo? (S/N): ").toUpperCase();
+            switch (opcaoperiodo) {
                 case "S":
                     Periodo periodo = validarPeriodo();
                     listaTurmas.get(idAtualizar).setPeriodo(periodo);
-                    System.out.println("Periodo atualizado para\n"+periodo);
+                    System.out.println("Periodo atualizado com sucesso para "+ periodo);
                     rodarNovamente = false;
                     break;
                 case "N":
-                    System.out.println("adeus");
                     rodarNovamente = false;
                     break;
                 default:
-                    System.out.println("Opçao invalida! Escolha S para SIM ou N para NÃO");
+                    System.out.println("opçao invalida! escolha S para sim ou N para não");
             }
         }
     }
 
-    private static void atualizarCurso(int idAtualizar){
-        boolean rodarNovamente = true;
-        while (rodarNovamente) {
-            String opcaoCurso = Leitura.dados("\nDeseja modificar o curso? (S/N): ").toUpperCase();
-            switch (opcaoCurso) {
-                case "S":
-                    String curso = Leitura.dados("Digite o curso");
-                    while(!isCharacter(curso)) {
-                        System.out.println("Nome de curso invalido! Não use números ou caracteres especiais");
-                        curso = Leitura.dados("Digite o curso");
-                    }
-                    listaTurmas.get(idAtualizar).setCurso(curso);
-                    System.out.println("Curso atualizado para\n"+curso);
-                    rodarNovamente = false;
-                    break;
-                case "N":
-                    System.out.println("adeus");
-                    rodarNovamente = false;
-                    break;
-                default:
-                    System.out.println("Opçao invalida! Escolha S para SIM ou N para NÃO");
-            }
-        }
-    }
-
-    private static void atualizarSigla(int idAtualizar) {
-        boolean rodarNovamente = true;
-        while (rodarNovamente) {
-            String opcaoSigla = Leitura.dados("\nDeseja modificar o curso? (S/N): ").toUpperCase();
-            switch (opcaoSigla) {
-                case "S":
-                    String sigla = Leitura.dados("Digite a sigla");
-                    while(!validarSigla(sigla)) {
-                        System.out.println("sigla invalida! Não use números ou caracteres especiais");
-                        sigla = Leitura.dados("Digite a sigla");
-                    }
-                    listaTurmas.get(idAtualizar).setSigla(sigla);
-                    System.out.println("Sigla atualizada para\n"+sigla);
-                    rodarNovamente = false;
-                    break;
-                case "N":
-                    System.out.println("adeus");
-                    rodarNovamente = false;
-                    break;
-                default:
-                    System.out.println("Opçao invalida! Escolha S para SIM ou N para NÃO");
-            }
-        }
-    }
 
     private static int validaIdTurma() {
         String opcao = Leitura.dados("\nDigite o numero da turma desejada: ");
@@ -284,23 +284,13 @@ public class Main {
 
     private static void cadastrarTurma() {
         Periodo periodo = validarPeriodo();
-
-        String curso = Leitura.dados("Digite o curso");
-        while(!isCharacter(curso)) {
-            System.out.println("Nome de curso invalido! Não use números ou caracteres especiais");
-            curso = Leitura.dados("Digite o curso");
-        }
-        String sigla = Leitura.dados("Digite a sigla");
-        while(!validarSigla(sigla)){
-            System.out.println("Sigla invalida! precisa conster texto e nao pode ser repetida");
-            sigla = Leitura.dados("Digite a sigla");
-        }
+        String curso = validarCurso();
+        String sigla = validarSigla();
 
         Turma turma = new Turma(curso, sigla, periodo);
         listaTurmas.add(turma);
-        System.out.println("Turma cadastrada com sucess");
+        System.out.println("Turma cadastrada com sucesso");
         menuTurmas();
-
     }
 
     private static boolean validarSigla(String sigla) {
