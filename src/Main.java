@@ -199,7 +199,7 @@ public class Main {
         //1 - Periodo, 2 - Curso, 3 - Sigla
         boolean rodarNovamente = true;
         while (rodarNovamente) {
-            String opcao = Leitura.dados("\nDeseja modificar "+ atributo +" ? (S/N): ").toUpperCase();
+            String opcao = Leitura.dados(" Deseja modificar "+ atributo +" ? (S/N): ").toUpperCase();
             switch (opcao) {
                 case "S":
                     switch (atributo){
@@ -327,7 +327,7 @@ public class Main {
     //AREA DE ALUNOS
     private static void listarAlunos() {
         if(isvazioAluno(listaAlunos)) {
-            System.out.println("Não ha turmas cadastradas");
+            System.out.println("Não ha alunos cadastrados");
             return;
         }
         for(Aluno a: listaAlunos){
