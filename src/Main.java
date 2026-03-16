@@ -125,7 +125,7 @@ public class Main {
 //            listaTurmas.remove(opcaoUsuario);
 
             listaTurmas.get(idExcluir).setAtivo(false);
-            System.out.println("Turma excluida com sucesso!");
+            System.out.println(listaTurmas.get(idExcluir).getCurso() + " excluida com sucesso!");
         }
         menuTurmas();
     }
@@ -172,7 +172,7 @@ public class Main {
         System.out.println("\nLista das Turmas: ");
         for (int i=0;i<listaTurmas.size();i++){
             if (listaTurmas.get(i).isAtivo())
-                System.out.printf("%d - %s",i+1, listaTurmas.get(i).getSigla());
+                System.out.printf("\n%d - %s",i+1, listaTurmas.get(i).getSigla());
         }
     }
 
@@ -199,7 +199,7 @@ public class Main {
         //1 - Periodo, 2 - Curso, 3 - Sigla
         boolean rodarNovamente = true;
         while (rodarNovamente) {
-            String opcao = Leitura.dados("Deseja modificar "+ atributo +" ? (S/N): ").toUpperCase();
+            String opcao = Leitura.dados("\nDeseja modificar "+ atributo +" ? (S/N): ").toUpperCase();
             switch (opcao) {
                 case "S":
                     switch (atributo){
@@ -324,7 +324,7 @@ public class Main {
         }
     }
 
-    // AREA DE ALUNOS
+    //AREA DE ALUNOS
     private static void listarAlunos() {
         if(isvazioAluno(listaAlunos)) {
             System.out.println("Não ha turmas cadastradas");
@@ -422,18 +422,49 @@ public class Main {
 
         int idAtualizar = validaIdAluno();
 
-        System.out.printf("O nome atual é: "+ listaAlunos.get(idAtualizar).getNome());
+        System.out.println("O nome atual é: "+ listaAlunos.get(idAtualizar).getNome());
         atualizarAlunoParcial("Nome", idAtualizar);
 
         System.out.println("A data de nascimeto atual é: "+ listaAlunos.get(idAtualizar).getDataNascimento());
         atualizarAlunoParcial("Data de Nascimento", idAtualizar);
 
         System.out.println("A turma do aluno é: "+ listaAlunos.get(idAtualizar).getTurma());
-        atualizarAlunoParcial("sigla", idAtualizar);
+        atualizarAlunoParcial("Turma", idAtualizar);
 
     }
 
-    private static void atualizarAlunoParcial(String nome, int idAtualizar) {
+    private static void atualizarAlunoParcial(String atributo, int idAtualizar) {
+        boolean rodarNovamente = true;
+        while (rodarNovamente) {
+            String opcao = Leitura.dados("\nDeseja modificar "+ atributo +" ? (S/N): ").toUpperCase();
+            switch (opcao) {
+                case "S":
+                    switch (atributo){
+                        case "Nome":
+                            String nome = validarNome();
+                            listaAlunos.get(idAtualizar).setNome(nome);
+                            break;
+                        case "Data de Nascimento":
+                            LocalDate dataDeNascimento = validarDataNascimento();
+                            listaAlunos.get(idAtualizar).setDataNascimento(dataDeNascimento);
+                            break;
+                        case "Turma":
+                            Turma turma = validarTurma();
+                            listaAlunos.get(idAtualizar).setTurma(turma);
+                            break;
+                    }
+
+                    System.out.println(atributo + " atualizado com sucesso");
+                    rodarNovamente = false;
+                    break;
+                case "N":
+                    System.out.println("adeus");
+                    rodarNovamente = false;
+                    break;
+                default:
+                    System.out.println("Opçao invalida! Escolha S para SIM ou N para NÃO");
+            }
+        }
     }
 
     private static int validaIdAluno() {
@@ -445,7 +476,7 @@ public class Main {
 
             if (opcaoUsuario == -1) {
                 System.out.println("opção inválida! Digite novamente");
-                opcao = Leitura.dados("Digite o número da turma desejada");
+                opcao = Leitura.dados("Digite o número do aluno desejado");
             } else {
                 opcaoValida = opcaoUsuario;
             }
@@ -469,13 +500,28 @@ public class Main {
     }
 
     private static void listaAlunosIndiceNome() {
-        System.out.println("\nLista das Turmas: ");
+        System.out.println("\nLista dos Alunos: ");
         for (int i=0;i<listaAlunos.size();i++){
             if (listaAlunos.get(i).isAtivo())
-                System.out.printf("%d - %s",i+1, listaAlunos.get(i).getNome());
+                System.out.printf("\n%d - %s",i+1, listaAlunos.get(i).getNome());
         }
     }
 
     private static void excluirAluno() {
+        if(isvazioAluno(listaAlunos)) {
+            System.out.println("Não ha Alunos cadastrados");
+            return;
+        }
+        listaAlunosIndiceNome();
+
+        int idExcluir = validaIdAluno();
+
+        if (confirmaExclusao()){
+//            listaTurmas.remove(opcaoUsuario);
+
+            listaAlunos.get(idExcluir).setAtivo(false);
+            System.out.println(listaAlunos.get(idExcluir).getNome() + " excluido com sucesso");
+        }
+        menuAlunos();
     }
 }
