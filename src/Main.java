@@ -121,13 +121,41 @@ public class Main {
 
         int idExcluir = validaIdTurma();
 
+        Turma turmaSelecionado = listaTurmas.get(idExcluir);
+
+
         if (confirmaExclusao()){
-//            listaTurmas.remove(opcaoUsuario);
+            boolean Tur = false;
+            for  (Aluno aluno : listaAlunos) {
+                if (aluno.isAtivo() && aluno.getTurma().equals(turmaSelecionado)) {
+                    Tur = true;
+                    break;
+                }
+            }
+            if (Tur){
+                String resposta = Leitura.dados("existem alunos dentro da turma se caso excluir a turma voce exclui os alunos tambem, Deseja excluir a turma? (S/N) : ").toUpperCase();
+                switch (resposta)
+                    {
+                    case "S":
+                        excluirTurmaSelecionada(turmaSelecionado);
+                        break;
+                        case "N":
+
+                    }
+
+
+            }
+
+
 
             listaTurmas.get(idExcluir).setAtivo(false);
             System.out.println(listaTurmas.get(idExcluir).getCurso() + " excluida com sucesso!");
         }
         menuTurmas();
+    }
+
+    private static void excluirTurmaSelecionada(Turma turmaSelecionado) {
+
     }
 
     private static boolean isVazio(ArrayList<Turma> listaTurmas) {
