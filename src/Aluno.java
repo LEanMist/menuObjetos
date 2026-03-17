@@ -47,10 +47,17 @@ public class Aluno {
 
     @Override
     public String toString() {
+        String nomeTurma;
+
+        if (turma == null) {
+            nomeTurma = "Sem Turma";
+        } else {
+            nomeTurma = turma.getCurso();
+        }
         return "Aluno{" +
                 "nome='" + nome + '\'' +
                 ", dataNascimento=" + dataNascimento +
-                ", turma=" + turma +
+                ", turma=" + nomeTurma +
                 '}';
     }
 }

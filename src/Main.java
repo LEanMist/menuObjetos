@@ -46,10 +46,10 @@ public class Main {
     private static void menuTurmas() {
         System.out.println("=== Turmas ===");
         System.out.println("1 - Listar Turmas");
-        System.out.println("2 - Cadastrar turma");
-        System.out.println("3 - Atualizar turma");
-        System.out.println("4 - Excluir turma");
-        System.out.println("5 - Voltar ao menu Principal");
+        System.out.println("2 - Cadastrar Turma");
+        System.out.println("3 - Atualizar Turma");
+        System.out.println("4 - Excluir Turma");
+        System.out.println("5 - Voltar ao Menu Principal");
         String opcao = Leitura.dados("digite a opção desejada: ");
         switch (opcao) {
             case "1":
@@ -81,9 +81,9 @@ public class Main {
         System.out.println("=== Alunos ===");
         System.out.println("1 - Listar Alunos");
         System.out.println("2 - Cadastrar Aluno");
-        System.out.println("3 - Atualizar aluno");
+        System.out.println("3 - Atualizar Aluno");
         System.out.println("4 - Excluir Aluno");
-        System.out.println("5 - Voltar ao menu principal");
+        System.out.println("5 - Voltar ao Menu Principal");
         String opcao = Leitura.dados("digite a opção desejada: ");
         switch (opcao) {
             case "1":
@@ -139,20 +139,21 @@ public class Main {
             if (temAluno) {
                 while (true) {
                     String resposta = Leitura.dados(
-                            "Existem alunos nessa turma. Deseja excluir os alunos também? (S/N): "
+                            "Existem alunos nessa turma. Deseja excluir os alunos(X) ou mantelos(M)? (X/M): "
                     ).toUpperCase();
 
                     switch (resposta) {
-                        case "S":
+                        case "X":
                             excluirAlunosDaTurma(turmaSelecionada);
                             break;
 
-                        case "N":
-                            System.out.println("Os alunos foram mantidos.");
+                        case "M":
+                            disvincularAlunodeTurma(turmaSelecionada);
+                            System.out.println("Os alunos foram mantidos, mas ficaram sem turma.");
                             break;
 
                         default:
-                            System.out.println("Opção inválida! Digite S ou N.");
+                            System.out.println("Opção inválida! Digite apenas X para excluir todos os alunos da turma ou M para mantelos.");
                             continue;
                     }
                     break;
@@ -165,6 +166,15 @@ public class Main {
         }
 
         menuTurmas();
+    }
+
+    private static void disvincularAlunodeTurma(Turma turmaSelecionada) {
+        for (Aluno aluno : listaAlunos) {
+            if (aluno.isAtivo() && aluno.getTurma().equals(turmaSelecionada)) {
+                aluno.setTurma(null);
+                System.out.println("Aluno " + aluno.getNome() + " Ficaram sem turma.");
+            }
+        }
     }
 
     private static void excluirAlunosDaTurma(Turma turmaSelecionada) {
@@ -377,9 +387,29 @@ public class Main {
             System.out.println("Não ha alunos cadastrados");
             return;
         }
+
+        boolean AlunosComTurma = false;
+        boolean AlunosSemTurma = false;
+
+        System.out.println("\n===Alunos com turma===");
         for(Aluno a: listaAlunos){
-            if (a.isAtivo())
+            if (a.isAtivo() && a.getTurma() !=null && a.getTurma().isAtivo()){
                 System.out.println(a);
+                AlunosComTurma = true;
+            }
+        }
+        if (!AlunosComTurma) {
+            System.out.println("Nenhum aluno com turma foi encontrado");
+        }
+        System.out.println("\n===Alunos sem turma===");
+        for(Aluno a: listaAlunos){
+            if (a.isAtivo() && a.getTurma() ==null){
+                System.out.println(a);
+                AlunosSemTurma = true;
+            }
+        }
+        if (!AlunosSemTurma) {
+            System.out.println("Nenhum aluno sem turma foi encontrado");
         }
     }
 
