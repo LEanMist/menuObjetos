@@ -113,50 +113,69 @@ public class Main {
     }
 
     private static void excluirTurma() {
-        if(isVazio(listaTurmas)) {
+        if (isVazio(listaTurmas)) {
             System.out.println("Não ha turmas cadastradas");
             return;
         }
+
         listaTurmasIndiceSigla();
 
         int idExcluir = validaIdTurma();
+        Turma turmaSelecionada = listaTurmas.get(idExcluir);
 
-        Turma turmaSelecionado = listaTurmas.get(idExcluir);
+        if (confirmaExclusao()) {
 
+            boolean temAluno = false;
 
-        if (confirmaExclusao()){
-            boolean Tur = false;
-            for  (Aluno aluno : listaAlunos) {
-                if (aluno.isAtivo() && aluno.getTurma().equals(turmaSelecionado)) {
-                    Tur = true;
+            // Verifica se existem alunos nessa turma
+            for (Aluno aluno : listaAlunos) {
+                if (aluno.isAtivo() && aluno.getTurma().equals(turmaSelecionada)) {
+                    temAluno = true;
                     break;
                 }
             }
-            if (Tur){
-                String resposta = Leitura.dados("existem alunos dentro da turma se caso excluir a turma voce exclui os alunos tambem, Deseja excluir a turma? (S/N) : ").toUpperCase();
-                switch (resposta)
-                    {
-                    case "S":
-                        excluirTurmaSelecionada(turmaSelecionado);
-                        break;
+
+            // Se tiver alunos, pergunta se deseja excluir também
+            if (temAluno) {
+                while (true) {
+                    String resposta = Leitura.dados(
+                            "Existem alunos nessa turma. Deseja excluir os alunos também? (S/N): "
+                    ).toUpperCase();
+
+                    switch (resposta) {
+                        case "S":
+                            excluirAlunosDaTurma(turmaSelecionada);
+                            break;
+
                         case "N":
+                            System.out.println("Os alunos foram mantidos.");
+                            break;
 
+                        default:
+                            System.out.println("Opção inválida! Digite S ou N.");
+                            continue;
                     }
-
-
+                    break;
+                }
             }
 
+            turmaSelecionada.setAtivo(false);
 
-
-            listaTurmas.get(idExcluir).setAtivo(false);
-            System.out.println(listaTurmas.get(idExcluir).getCurso() + " excluida com sucesso!");
+            System.out.println(turmaSelecionada.getCurso() + " excluída com sucesso!");
         }
+
         menuTurmas();
     }
 
-    private static void excluirTurmaSelecionada(Turma turmaSelecionado) {
-
+    private static void excluirAlunosDaTurma(Turma turmaSelecionada) {
+        for (Aluno aluno : listaAlunos) {
+            if (aluno.isAtivo() && aluno.getTurma().equals(turmaSelecionada)) {
+                aluno.setAtivo(false);
+                System.out.println("Aluno " + aluno.getNome() + " também foi excluído.");
+            }
+        }
     }
+
 
     private static boolean isVazio(ArrayList<Turma> listaTurmas) {
         if (listaTurmas.isEmpty()) return true;
